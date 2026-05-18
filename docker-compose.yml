@@ -1,0 +1,108 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: messaging-postgres
+    environment:
+      POSTGRES_DB: messaging
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - messaging-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # mongodb:
+  #   image: mongo:7
+  #   container_name: messaging-mongodb
+  #   environment:
+  #     MONGO_INITDB_DATABASE: messaging
+  #     MONGO_INITDB_ROOT_USERNAME: admin
+  #     MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-change-me}
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - mongodb_data:/data/db
+  #   networks:
+  #     - messaging-network
+  #   healthcheck:
+  #     test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: messaging-redis
+  #   ports:
+  #     - "6379:6379"
+    #   command: redis-server --requirepass ${REDIS_PASSWORD}
+  #   volumes:
+  #     - redis_data:/data
+  #   networks:
+  #     - messaging-network
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-change-me}", "ping"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: messaging-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+      # mongodb:
+      #   condition: service_healthy
+      # redis:
+      #   condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/messaging
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      APP_JWT_SECRET: ${APP_JWT_SECRET:-change-me}
+      # SPRING_JPA_SHOW_SQL: "true"
+      # SPRING_DATA_MONGODB_URI: mongodb://admin:${MONGO_INITDB_ROOT_PASSWORD:-change-me}@mongodb:27017/messaging?authSource=admin
+      # SPRING_DATA_MONGODB_AUTO_INDEX_CREATION: "true"
+      # SPRING_REDIS_HOST: redis
+      # SPRING_REDIS_PORT: "6379"
+        # SPRING_REDIS_PASSWORD: "${REDIS_PASSWORD}"
+    networks:
+      - messaging-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: messaging-frontend
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+    networks:
+      - messaging-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  # mongodb_data:
+  # redis_data:
+
+networks:
+  messaging-network:
+    driver: bridge

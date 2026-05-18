@@ -21,9 +21,18 @@ frontend/.env.*
 # Backend (Maven/Java)
 HELP.md
 target/
+.mvn/
+mvnw
+mvnw.cmd
+mvnw.cmd:Zone.Identifier
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+
+# Spring Boot local configs
+**/application-local.properties
+**/application-*.properties
+!**/application.properties
 
 ### STS ###
 .apt_generated
@@ -64,6 +73,10 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+.vite
+coverage
+storybook-static
+.eslintcache
 *.local
 
 # Editor directories and files

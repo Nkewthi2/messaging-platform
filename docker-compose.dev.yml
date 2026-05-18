@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: builder
+    container_name: messaging-backend-dev
+    working_dir: /app
+    command: mvn spring-boot:run -DskipTests
+    volumes:
+      - ./backend:/app
+      - m2_cache:/root/.m2
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/messaging
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 123456
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+      SPRING_DATA_MONGODB_URI: mongodb://admin:123456@mongodb:27017/messaging?authSource=admin
+      SPRING_DATA_MONGODB_AUTO_INDEX_CREATION: "true"
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: "6379"
+      SPRING_REDIS_PASSWORD: "123456"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - messaging-network
+    restart: unless-stopped
+
+  frontend:
+    image: node:22-alpine
+    container_name: messaging-frontend-dev
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host"
+    volumes:
+      - ./frontend:/app
+      - node_modules_cache:/app/node_modules
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    networks:
+      - messaging-network
+    restart: unless-stopped
+
+volumes:
+  m2_cache:
+  node_modules_cache:
+
+networks:
+  messaging-network:
+    driver: bridge
