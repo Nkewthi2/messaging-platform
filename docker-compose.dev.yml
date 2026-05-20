@@ -1,11 +1,25 @@
-version: '3.8'
-
 services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: messaging-postgres-dev
+    environment:
+      POSTGRES_DB: messaging
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - messaging-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-      target: builder
+    image: maven:3.9.6-eclipse-temurin-21
     container_name: messaging-backend-dev
     working_dir: /app
     command: mvn spring-boot:run -DskipTests
@@ -20,18 +34,18 @@ services:
       SPRING_DATASOURCE_PASSWORD: 123456
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: "true"
-      SPRING_DATA_MONGODB_URI: mongodb://admin:123456@mongodb:27017/messaging?authSource=admin
-      SPRING_DATA_MONGODB_AUTO_INDEX_CREATION: "true"
-      SPRING_REDIS_HOST: redis
-      SPRING_REDIS_PORT: "6379"
-      SPRING_REDIS_PASSWORD: "123456"
+      # SPRING_DATA_MONGODB_URI: mongodb://admin:123456@mongodb:27017/messaging?authSource=admin
+      # SPRING_DATA_MONGODB_AUTO_INDEX_CREATION: "true"
+      # SPRING_REDIS_HOST: redis
+      # SPRING_REDIS_PORT: "6379"
+      # SPRING_REDIS_PASSWORD: "123456"
     depends_on:
       postgres:
         condition: service_healthy
-      mongodb:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      # mongodb:
+      #   condition: service_healthy
+      # redis:
+      #   condition: service_healthy
     networks:
       - messaging-network
     restart: unless-stopped
@@ -45,7 +59,7 @@ services:
       - ./frontend:/app
       - node_modules_cache:/app/node_modules
     ports:
-      - "5173:5173"
+      - "80:5173"
     depends_on:
       - backend
     networks:
@@ -55,6 +69,7 @@ services:
 volumes:
   m2_cache:
   node_modules_cache:
+  postgres_data:
 
 networks:
   messaging-network:
