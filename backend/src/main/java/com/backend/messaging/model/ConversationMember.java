@@ -27,7 +27,8 @@ import lombok.ToString;
 public class ConversationMember {
     
     @EmbeddedId
-    private ConversationMemberId id;
+    @Builder.Default
+    private ConversationMemberId id = new ConversationMemberId();
     
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("conversationId")
