@@ -1,7 +1,8 @@
 package com.backend.messaging.service;
 
-import com.backend.messaging.dto.AuthResponse;
-import com.backend.messaging.dto.LoginRequest;
+import com.backend.messaging.dto.auth.AuthResponse;
+import com.backend.messaging.dto.auth.LoginRequest;
+import com.backend.messaging.dto.auth.RegisterRequest;
 import com.backend.messaging.model.User;
 import com.backend.messaging.repository.UserRepository;
 
@@ -9,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import com.backend.messaging.dto.RegisterRequest;
 
 @Service
 @RequiredArgsConstructor
