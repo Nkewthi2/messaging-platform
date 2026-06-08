@@ -1,6 +1,7 @@
 import type { ReactNode } from "react"
 import ChatList from "../features/chat/components/ChatList"
 import ChatPanel from "../features/chat/components/ChatPanel"
+import Header from "../components/Header"
 
 type Props = {
   children?: ReactNode
@@ -9,6 +10,7 @@ type Props = {
 export default function ChatLayout({ children }: Props) {
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
+      <Header />
       <div className="max-w-6xl mx-auto w-full px-4 py-6">
         <div className="bg-transparent rounded-lg overflow-hidden" style={{ display: 'flex', gap: '16px' }}>
           <aside style={{ width: 320, flex: '0 0 320px' }}>
