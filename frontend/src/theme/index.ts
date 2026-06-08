@@ -50,6 +50,7 @@ export const applyTheme = (themeName: ThemeName) => {
   root.dataset.theme = themeName
   root.style.setProperty("--color-bg", theme.colors.background)
   root.style.setProperty("--color-surface", theme.colors.surface)
+  root.style.setProperty("--color-header", theme.colors.surface)
   root.style.setProperty("--color-primary", theme.colors.primary)
   root.style.setProperty("--color-primary-text", theme.colors.primaryText)
   root.style.setProperty("--color-muted-text", theme.colors.mutedText)

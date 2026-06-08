@@ -1,4 +1,6 @@
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { t, setLocale, getLocale, onLocaleChange, type Locale } from "../../../i18n";
 
 type RegisterFormData = {
   username: string;
@@ -13,6 +15,18 @@ export default function RegisterForm() {
     handleSubmit,
   } = useForm<RegisterFormData>();
 
+  const [locale, setLocaleState] = useState<Locale>(getLocale())
+
+  const handleChangeLocale = (l: Locale) => {
+    setLocale(l)
+    setLocaleState(l)
+  }
+
+  useEffect(() => {
+    const unsub = onLocaleChange((l) => setLocaleState(l))
+    return unsub
+  }, [])
+
   const onSubmit = (data: RegisterFormData) => {
     console.log(data);
   };
@@ -22,34 +36,40 @@ export default function RegisterForm() {
       onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col gap-4"
     >
-      <h1 className="text-3xl font-bold text-white">
-        Register
-      </h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold" style={{ color: 'var(--color-primary-text)' }}>
+          {t('auth.register')}
+        </h1>
+      </div>
 
       <input
         {...register("username")}
-        placeholder="Username"
-        className="p-3 rounded-lg bg-zinc-800 text-white"
+        placeholder={t('auth.username')}
+        className="p-3 rounded-lg"
+        style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-primary-text)', border: '1px solid var(--color-border)' }}
       />
 
       <input
         {...register("password")}
         type="password"
-        placeholder="Password"
-        className="p-3 rounded-lg bg-zinc-800 text-white"
+        placeholder={t('auth.password')}
+        className="p-3 rounded-lg"
+        style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-primary-text)', border: '1px solid var(--color-border)' }}
       />
 
       <input
         {...register("confirmPassword")}
         type="password"
-        placeholder="Confirm Password"
-        className="p-3 rounded-lg bg-zinc-800 text-white"
+        placeholder={t('auth.confirmPassword')}
+        className="p-3 rounded-lg"
+        style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-primary-text)', border: '1px solid var(--color-border)' }}
       />
 
       <button
-        className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-lg"
+        className="text-white p-3 rounded-lg"
+        style={{ backgroundColor: 'var(--color-primary)' }}
       >
-        Register
+        {t('auth.register')}
       </button>
     </form>
   );

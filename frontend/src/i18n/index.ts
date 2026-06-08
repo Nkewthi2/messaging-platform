@@ -15,6 +15,15 @@ export const getLocale = () => currentLocale
 
 export const setLocale = (locale: Locale) => {
   currentLocale = locale
+  i18nEvent.dispatchEvent(new Event("localechange"))
+}
+
+const i18nEvent = new EventTarget()
+
+export const onLocaleChange = (cb: (locale: Locale) => void) => {
+  const handler = () => cb(currentLocale)
+  i18nEvent.addEventListener("localechange", handler)
+  return () => i18nEvent.removeEventListener("localechange", handler)
 }
 
 const interpolate = (template: string, params?: Record<string, string | number>) => {
