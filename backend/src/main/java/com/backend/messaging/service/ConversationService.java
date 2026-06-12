@@ -42,9 +42,25 @@ public class ConversationService {
             return false;
         }
 
+        // If PRIVATE conversation between two users, compute private_key and avoid duplicates
+        String privateKey = null;
+        if ("PRIVATE".equalsIgnoreCase(request.getType()) && request.getMemberIds() != null && request.getMemberIds().size() == 1) {
+            Long otherId = request.getMemberIds().get(0);
+            Long ownerId = user.getId();
+            Long a = Math.min(ownerId, otherId);
+            Long b = Math.max(ownerId, otherId);
+            privateKey = a + ":" + b;
+            var existing = conversationRepository.findByPrivateKey(privateKey);
+            if (existing.isPresent()) {
+                // conversation already exists, skip creation
+                return true;
+            }
+        }
+
         Conversation conversation = Conversation.builder()
                         .name(request.getName())
                         .type(request.getType())
+                        .privateKey(privateKey)
                         .createdAt(LocalDateTime.now())
                         .build();
 

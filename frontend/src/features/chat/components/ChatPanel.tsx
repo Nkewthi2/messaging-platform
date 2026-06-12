@@ -1,30 +1,28 @@
-import { useState } from "react"
 import { t } from "../../../i18n"
+import { useChatMessages } from "../hooks/useChatMessages"
+type Props = {
+  title?: string
+  conversationId?: string
+}
 
-export default function ChatPanel() {
-  const [messages] = useState([
-    { id: 'm1', from: 'Alice', text: 'Hello!' },
-    { id: 'm2', from: 'me', text: 'Hi Alice, how are you?' },
-    { id: 'm3', from: 'Alice', text: 'I am good, thanks.' },
-  ])
-
+export default function ChatPanel({ title, conversationId }: Props) {
+  const messages = useChatMessages(conversationId);
+  console.log(messages)
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div style={{ padding: 12, borderBottom: '1px solid var(--color-border)', color: 'var(--color-primary-text)', fontWeight: 600 }}>
-        {t('chat.title')}
-      </div>
+    <div className="flex flex-col h-full">
+      <div className="p-4 border-b border-border text-text font-semibold">{title ?? t('chat.title')}</div>
 
-      <div style={{ flex: 1, padding: 12, overflow: 'auto' }}>
-        {messages.map(m => (
-          <div key={m.id} style={{ marginBottom: 8 }}>
-            <div style={{ fontSize: 13, color: 'var(--color-primary-text)', fontWeight: 600 }}>{m.from}</div>
-            <div style={{ color: 'var(--color-primary-text)' }}>{m.text}</div>
-          </div>
-        ))}
-      </div>
+    <div className="flex-1 p-3 overflow-auto">
+      {messages && messages.map(m => (
+        <div key={m.id} className="mb-2">
+          <div className="text-sm font-semibold texttext">{m.senderId}</div>
+          <div className="text-text">{m.text}</div>
+        </div>
+      ))}
+    </div>
 
-      <div style={{ padding: 12, borderTop: '1px solid var(--color-border)' }}>
-        <input placeholder={t('chat.placeholder')} style={{ width: '100%', padding: '10px', borderRadius: 8, border: '1px solid var(--color-border)', background: 'var(--color-surface)', color: 'var(--color-primary-text)' }} />
+      <div className="p-3 border-t border-border">
+        <input placeholder={t('chat.placeholder')} className="w-full p-2 rounded-md border border-border bg-surface text-primary-text" />
       </div>
     </div>
   )

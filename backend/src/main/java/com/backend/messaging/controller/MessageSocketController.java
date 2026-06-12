@@ -5,6 +5,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 
 import com.backend.messaging.dto.message.SendMessageRequest;
+import com.backend.messaging.dto.message.WsSendMessageRequest;
 import com.backend.messaging.service.MessageService;
 
 @Controller
@@ -13,7 +14,7 @@ public class MessageSocketController {
     MessageService messageService;
 
     @MessageMapping("/messages.send")
-    public void send(SendMessageRequest request) {
-        messageService.create(request);
+    public void send(WsSendMessageRequest request) {
+        messageService.create(request.getConversationId(), request.toSendMessageRequest());
     }
 }

@@ -40,6 +40,9 @@ public class Conversation {
     
     @Column(name = "last_message_id", length = 64)
     private String lastMessageId; // MongoDB ObjectId reference
+
+    @Column(name = "private_key", length = 100)
+    private String privateKey;
     
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

@@ -44,7 +44,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     try {
         String jwt = authHeader.substring(7);
-
         if (tokenBlacklistService.isRevoked(jwt)) {
             filterChain.doFilter(request, response);
             return;
