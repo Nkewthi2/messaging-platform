@@ -19,10 +19,10 @@ public class MessageService {
     @Autowired
     SimpMessagingTemplate messagingTemplate;
 
-    public Message create(SendMessageRequest request) {
+    public Message create(Long conversationId, SendMessageRequest request) {
         Message message = Message.builder()
                 .id(request.getId())
-                .conversationId(request.getConversationId())
+                .conversationId(conversationId)
                 .senderId(request.getSenderId())
                 .blocks(request.getBlocks())
                 .replyTo(request.getReplyTo())

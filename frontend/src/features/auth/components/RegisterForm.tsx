@@ -37,40 +37,30 @@ export default function RegisterForm() {
       className="flex flex-col gap-4"
     >
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold" style={{ color: 'var(--color-primary-text)' }}>
-          {t('auth.register')}
-        </h1>
+        <h1 className="text-3xl font-bold text-primary-text">{t('auth.register')}</h1>
       </div>
 
       <input
         {...register("username")}
         placeholder={t('auth.username')}
-        className="p-3 rounded-lg"
-        style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-primary-text)', border: '1px solid var(--color-border)' }}
+        className="p-3 rounded-lg bg-surface text-primary-text border border-border"
       />
 
       <input
         {...register("password")}
         type="password"
         placeholder={t('auth.password')}
-        className="p-3 rounded-lg"
-        style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-primary-text)', border: '1px solid var(--color-border)' }}
+        className="p-3 rounded-lg bg-surface text-primary-text border border-border"
       />
 
       <input
         {...register("confirmPassword")}
         type="password"
         placeholder={t('auth.confirmPassword')}
-        className="p-3 rounded-lg"
-        style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-primary-text)', border: '1px solid var(--color-border)' }}
+        className="p-3 rounded-lg bg-surface text-primary-text border border-border"
       />
 
-      <button
-        className="text-white p-3 rounded-lg"
-        style={{ backgroundColor: 'var(--color-primary)' }}
-      >
-        {t('auth.register')}
-      </button>
+      <button className="text-white p-3 rounded-lg bg-primary">{t('auth.register')}</button>
     </form>
   );
 }

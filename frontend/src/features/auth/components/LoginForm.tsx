@@ -53,33 +53,35 @@ export default function LoginForm() {
       onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col gap-4"
     >
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold" style={{ color: 'var(--color-primary-text)' }}>
-          {t('auth.login')}
-        </h1>
+      <div className="flex items-center justify-center">
+        <h1 className="text-3xl font-bold text-primary">{t('auth.login')}</h1>
       </div>
 
       <input
         {...register("username")}
         placeholder={t('auth.username')}
-        className="p-3 rounded-lg"
-        style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-primary-text)', border: '1px solid var(--color-border)' }}
+        className="p-3 rounded text-text border border-border"
       />
 
       <input
         {...register("password")}
         type="password"
         placeholder={t('auth.password')}
-        className="p-3 rounded-lg"
-        style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-primary-text)', border: '1px solid var(--color-border)' }}
+        className="p-3 rounded text-text border border-border"
       />
-
-      <button
-        className="text-white p-3 rounded-lg"
-        style={{ backgroundColor: 'var(--color-primary)' }}
-      >
-        {t('auth.login')}
-      </button>
+      <div className="flex justify-center gap-1">
+        <p>{t('auth.notHaveAccount')}</p>
+        <span
+          role="button"
+          tabIndex={0}
+          onClick={() => navigate('/register')}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/register') }}
+          className="text-primary cursor-pointer"
+        >
+          {t('auth.register')}
+        </span>
+      </div>
+      <button className="self-center text-white p-3 px-5 rounded-full bg-primary">{t('auth.confirm')}</button>
     </form>
   );
 }

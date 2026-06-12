@@ -2,11 +2,13 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './styles/globals.css'
 import App from './app/App.tsx'
-import { applyTheme, defaultTheme } from './theme'
+import { applyTheme, defaultTheme, getStoredTheme, setTheme } from './theme'
 import { useAuthStore } from './features/auth/auth.store'
 import { setAuthToken } from './services/api/client'
 
-applyTheme(defaultTheme)
+// apply saved theme if present
+const stored = getStoredTheme()
+applyTheme(stored ?? defaultTheme)
 
 const token = useAuthStore.getState().token
 if (token) {

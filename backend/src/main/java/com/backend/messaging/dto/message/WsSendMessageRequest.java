@@ -13,9 +13,19 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SendMessageRequest {
+public class WsSendMessageRequest {
     private String id;
+    private Long conversationId;
     private Long senderId;
     private List<MessageBlock> blocks;
     private String replyTo;
+
+    public SendMessageRequest toSendMessageRequest() {
+        return SendMessageRequest.builder()
+                .id(this.id)
+                .senderId(this.senderId)
+                .blocks(this.blocks)
+                .replyTo(this.replyTo)
+                .build();
+    }
 }
