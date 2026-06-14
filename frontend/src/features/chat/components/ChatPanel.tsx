@@ -1,5 +1,8 @@
+import { useState } from "react";
 import { t } from "../../../i18n";
 import { useChatMessages } from "../hooks/useChatMessages";
+import { sendMessage } from "../services/chat.service";
+import { Send } from "lucide-react";
 
 type Props = {
   owner_id?: number;
@@ -13,7 +16,19 @@ export default function ChatPanel({
   conversationId,
 }: Props) {
   const messages = useChatMessages(conversationId);
+  const [message, setMessage] = useState("");
+  const handleSend = () => {
+    if (!message.trim() || !conversationId || !owner_id) {
+      return;
+    }
+  sendMessage({
+    conversationId: Number(conversationId),
+    senderId: owner_id,
+    text: message,
+  });
 
+    setMessage("");
+  };
   return (
     <div className="flex flex-col h-full">
       <div className="p-4 border-b border-border text-text font-semibold">
@@ -23,7 +38,6 @@ export default function ChatPanel({
       <div className="flex-1 p-3 overflow-auto">
         {messages?.map((m) => {
           const isOwner = m.senderId === owner_id;
-
           return (
             <div
               key={m.id}
@@ -53,11 +67,30 @@ export default function ChatPanel({
         })}
       </div>
 
-      <div className="p-3 border-t border-border">
+      <div className="flex p-3 border-t border-border gap-2">
         <input
+          value={message}
           placeholder={t("chat.placeholder")}
-          className="w-full p-2 rounded-md border border-border"
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSend();
+            }
+          }}
+          className="w-full p-1 rounded-md border border-border outline-none"
         />
+        {message.trim() &&  (
+          <button
+            disabled={!message.trim()}
+            onClick={() => {handleSend()}}
+            className="
+              p-2 rounded-full
+              transition-colors
+            "
+          >
+            <Send size={20} className="text-primary" />
+          </button>
+        )}
       </div>
     </div>
   );

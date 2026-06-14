@@ -1,5 +1,5 @@
 import type { ConversationReponse } from "../types/ConversationResponse";
-import type { Conversation } from "../types/conversation";
+import type { Conversation } from "../types/Conversation";
 
 export const mapConversation = (
     conversation:ConversationReponse

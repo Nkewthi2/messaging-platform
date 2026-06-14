@@ -1,7 +1,7 @@
 import { t } from "../../../i18n";
 import { Search } from "lucide-react";
 import { useConversation } from "../hooks/useConversaton";
-import type { Conversation } from "../types/conversation";
+import type { Conversation } from "../types/Conversation";
 
 type Props = {
   selectedConversation?: Conversation | null;
