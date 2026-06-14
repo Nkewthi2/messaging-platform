@@ -1,6 +1,6 @@
 import { api } from "../../services/api/client";
 
-export const conversation = async () => {
+export const conversations = async () => {
   const response = await api.get("/conversation");
   return response.data;
 };
